@@ -9,6 +9,9 @@ Version 3, 11/07/2012 - Now much faster at changing colors rapidly.
 Version 2, 9/23/2011 - Fixes a bug that could result in jerky animation.
 */
 
+// BE
+// Added setColor method
+
 #include <X11/Xlib.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -117,6 +120,8 @@ void gfx_color( int r, int g, int b )
 
 	XSetForeground(gfx_display, gfx_gc, color.pixel);
 }
+
+// Added setColor method
 
 void gfx_setColor(unsigned long pixelColor)
 {
