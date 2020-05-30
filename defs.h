@@ -4,10 +4,7 @@ Brian Eubanks
 */
 #ifndef DEFS_H
 #define DEFS_H
-<<<<<<< HEAD
 #include <stdbool.h>
-=======
->>>>>>> c08019c7524e3c039562becfea741c85cf7f8159
 
 #define GRIDX  28
 #define GRIDY  36
@@ -91,16 +88,10 @@ struct pac{
 struct ghost{
     int x, y, xdir, ydir;
     int mode;
-<<<<<<< HEAD
     struct tile currentTile,prevTile,targetTile;
     char turnDirection,moveDirection;
     int* sprites;
     bool turnCheck;
-=======
-    struct tile currentTile,nextTile,targetTile;
-    char turnDirection,moveDirection;
-    int* sprites;
->>>>>>> c08019c7524e3c039562becfea741c85cf7f8159
 };
 
 struct fruit{
