@@ -6,8 +6,11 @@ Brian Eubanks
 */
 
 #include <stdio.h>
+<<<<<<< HEAD
 #include <stdlib.h>
 #include <stdbool.h>
+=======
+>>>>>>> c08019c7524e3c039562becfea741c85cf7f8159
 #include <unistd.h>
 
 
@@ -28,6 +31,7 @@ void updateGhost(){
     
     
     //Update Blinky Tile Based on XY coords
+<<<<<<< HEAD
     blinky.currentTile.x = (int)blinky.x/TILE;
     blinky.currentTile.y = (int)blinky.y/TILE;
     setCurrentGhostTileGrid();
@@ -175,6 +179,10 @@ void updateGhost(){
         */
         
     }
+=======
+    blinky.currentTile.x = (int)p.x/TILE;
+    blinky.currentTile.y = (int)p.y/TILE;
+>>>>>>> c08019c7524e3c039562becfea741c85cf7f8159
     
     
     //Wall
@@ -202,6 +210,36 @@ void updateGhost(){
         }
     }
     
+<<<<<<< HEAD
+=======
+    
+    //Check for Intersections
+    
+    if(blinky.currentTile.grid==-1){
+        if(newmaze[blinky.x/TILE][blinky.y/TILE+1]<=2&&blinky.y<p.y){
+            if(blinky.moveDirection!=UP){
+                blinky.turnDirection=DOWN;
+            }
+        }
+        else if(newmaze[blinky.x/TILE][blinky.y/TILE-1]<=2&&blinky.y>p.y){
+            if(blinky.moveDirection!=DOWN){
+                blinky.turnDirection=UP;
+            }
+        }
+        //Check for Horizontal Intersections
+        if(newmaze[blinky.x/TILE+1][blinky.y/TILE]<=2&&blinky.x<p.x){
+            if(blinky.moveDirection!=LEFT){
+                blinky.turnDirection=RIGHT;
+            }
+        }
+        else if(newmaze[blinky.x/TILE-1][blinky.y/TILE]<=2&&blinky.x>p.x){
+            if(blinky.moveDirection!=RIGHT){
+                blinky.turnDirection=LEFT;
+            }
+        }
+    }
+    
+>>>>>>> c08019c7524e3c039562becfea741c85cf7f8159
 
     //Change dir for turns based on turnDirection
 
@@ -233,7 +271,11 @@ void updateGhost(){
     }
 
     //Set Move Direction if not Cornering
+<<<<<<< HEAD
     if(blinky.xdir==1){
+=======
+    else if(blinky.xdir==1){
+>>>>>>> c08019c7524e3c039562becfea741c85cf7f8159
         blinky.moveDirection=RIGHT;
     }
     else if(blinky.xdir==-1){
@@ -391,10 +433,13 @@ void updatePac(){
         //flash screen
         resetBoard();
     }
+<<<<<<< HEAD
     
     if(p.currentTile.x==blinky.currentTile.x&&p.currentTile.y==blinky.currentTile.y){
         die();
     }
+=======
+>>>>>>> c08019c7524e3c039562becfea741c85cf7f8159
         
     //printf("%d\n",dotCount);
 
@@ -479,6 +524,7 @@ void resetBoard(){
     blinky.currentTile.x=14;
     blinky.currentTile.y=14;
     
+<<<<<<< HEAD
     blinky.prevTile.x=14;
     blinky.prevTile.y=14;
     
@@ -521,6 +567,8 @@ void die(){
     blinky.prevTile.x=14;
     blinky.prevTile.y=14;
     
+=======
+>>>>>>> c08019c7524e3c039562becfea741c85cf7f8159
     blinky.x = TILE*blinky.currentTile.x;
     blinky.y = TILE*blinky.currentTile.y+4;
     
