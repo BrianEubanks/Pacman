@@ -20,24 +20,33 @@ Brian Eubanks
 
 
 
-
+int tickValue;
 
 
 
 void updateGhost(){
     
+    //Tunnel
+    bool tunnel = false;
+    
+    if(blinky.currentTile.x<0){
+        if(blinky.xdir<0)
+            blinky.x=TILE*(GRIDX+1);
+        tunnel=true;
+    }
+    else if(blinky.currentTile.x>GRIDX){
+        if(blinky.xdir>0)
+            blinky.x=-1*TILE;
+        tunnel=true;
+    }
     
     //Update Blinky Tile Based on XY coords
     blinky.currentTile.x = (int)blinky.x/TILE;
     blinky.currentTile.y = (int)blinky.y/TILE;
     setCurrentGhostTileGrid();
     
-
     
-    
-
-    
-    
+    if(!tunnel){
     //Check for Intersections
     
     if(blinky.currentTile.grid<0&&blinky.turnCheck){
@@ -47,8 +56,13 @@ void updateGhost(){
         
         //Distance between Pac and Blinky
         
-        int xdif = p.currentTile.x - blinky.currentTile.x;
-        int ydif = p.currentTile.y - blinky.currentTile.y;
+        //int xdif = p.currentTile.x - blinky.currentTile.x;
+        //int ydif = p.currentTile.y - blinky.currentTile.y;
+        
+        //Distance between Blinky and target Tile
+        
+        int xdif = blinky.targetTile.x - blinky.currentTile.x;
+        int ydif = blinky.targetTile.y - blinky.currentTile.y;
         
         
         // Absolute Value
@@ -136,50 +150,53 @@ void updateGhost(){
         }
         */
         if(furthestAxis=='y'){
-            if(dx==LEFT&&left){
-                blinky.turnDirection=LEFT;
-            }
-            if(dx==RIGHT&&right){
-                blinky.turnDirection=RIGHT;
-            }
             if(dy==UP&&up){
                 blinky.turnDirection=UP;
             }
-            if(dy==DOWN&&down){
+            else if(dy==DOWN&&down){
                 blinky.turnDirection=DOWN;
+            }
+            else if(dx==LEFT&&left){
+                blinky.turnDirection=LEFT;
+            }
+            else if(dx==RIGHT&&right){
+                blinky.turnDirection=RIGHT;
             }
         }
-        if(furthestAxis=='x'){
-            if(dy==UP&&up){
-                blinky.turnDirection=UP;
-            }
-            if(dy==DOWN&&down){
-                blinky.turnDirection=DOWN;
-            }
+        else if(furthestAxis=='x'){
             if(dx==LEFT&&left){
                 blinky.turnDirection=LEFT;
             }
-            if(dx==RIGHT&&right){
+            else if(dx==RIGHT&&right){
                 blinky.turnDirection=RIGHT;
+            }
+            else if(dy==UP&&up){
+                blinky.turnDirection=UP;
+            }
+            else if(dy==DOWN&&down){
+                blinky.turnDirection=DOWN;
             }
         }
 
-        /*
+        
         printf("TurnBlinky\n");
-        printf("xdif: %d - %d = %d\n",p.currentTile.x,blinky.currentTile.x,xdif);
-        printf("ydif: %d - %d = %d\n",p.currentTile.y,blinky.currentTile.y,ydif);
+        printf("xdif: %d - %d = %d\n",blinky.targetTile.x,blinky.currentTile.x,xdif);
+        printf("ydif: %d - %d = %d\n",blinky.targetTile.y,blinky.currentTile.y,ydif);
+        printf("furthestAxis: %c\n",furthestAxis);
+        printf("dx: %c\n",dx);
+        printf("dy: %c\n",dy);
         printf("up: %d\n",up);
         printf("down: %d\n",down);
         printf("left: %d\n",left);
         printf("right: %d\n\n\n\n",right);
-        */
+        
         
     }
     
-    
     //Wall
     //Check for Horizontal Wall
-    if(newmaze[blinky.x/TILE+blinky.xdir][blinky.y/TILE]>2){
+    if(newmaze[blinky.x/TILE+blinky.xdir][blinky.y/TILE]>2&&blinky.turnCheck){
+        blinky.turnCheck=false;
         //Check for vertical wall
         blinky.turnDirection=UP;
         if(newmaze[blinky.x/TILE][blinky.y/TILE-1]>2){
@@ -191,7 +208,8 @@ void updateGhost(){
     }
     
     //Check for Vertical Wall
-    else if(newmaze[blinky.x/TILE][blinky.y/TILE+blinky.ydir]>2){
+    else if(newmaze[blinky.x/TILE][blinky.y/TILE+blinky.ydir]>2&&blinky.turnCheck){
+        blinky.turnCheck=false;
         //Check for horizontal wall
         blinky.turnDirection=RIGHT;
         if(newmaze[blinky.x/TILE+1][blinky.y/TILE]>2){
@@ -201,6 +219,9 @@ void updateGhost(){
             //blinky.ydir=0;
         }
     }
+    
+    
+
     
 
     //Change dir for turns based on turnDirection
@@ -248,7 +269,7 @@ void updateGhost(){
     else{
         //chew=false;
     }
-
+    }//tunnel
     
     
     blinky.x+=blinky.xdir;
@@ -259,14 +280,33 @@ void updateGhost(){
 void updatePac(){
     
 
+    //Tunnel
+    bool tunnel = false;
+    
+    if(p.currentTile.x<0&&p.xdir<0){
+        p.x=TILE*(GRIDX+1);
+        tunnel=true;
+    }
+    else if(p.currentTile.x>GRIDX&&p.xdir>0){
+        p.x=-1*TILE;
+        tunnel=true;
+    }
+    
     //Update Tile based on xy coords
     
     p.currentTile.x = (int)p.x/TILE;
     p.currentTile.y = (int)p.y/TILE;
     
     setCurrentPacTileGrid();
-   
     
+    //Set Ghost Target Tiles
+    blinky.targetTile.x=p.currentTile.x+p.xdir;
+    blinky.targetTile.y=p.currentTile.y+p.ydir;
+    
+    
+
+   
+    if(!tunnel){
 
      //Wall Checking
     
@@ -354,7 +394,7 @@ void updatePac(){
     p.chew=1;
    
     //move Pacman Coords after checking for walls and turning
-    
+    }//tunnel
     p.x+=p.xdir;
     p.y+=p.ydir;
         
@@ -397,6 +437,9 @@ void updatePac(){
     }
         
     //printf("%d\n",dotCount);
+    
+    
+    
 
 }
 
@@ -405,6 +448,10 @@ void updatePac(){
 
 void tick(int t){
     usleep(t);
+}
+
+void startPause(){
+    sleep(2);
 }
 
 char handleInput(){
@@ -454,7 +501,10 @@ char handleInput(){
     }
     return c;
 }
+
 void resetBoard(){
+    
+    
     
     dotCount=0;
     makeNewMaze();
@@ -490,6 +540,9 @@ void resetBoard(){
     
     blinky.turnDirection=LEFT;
     blinky.moveDirection=LEFT;
+    
+    tickValue-=10;
+    startPause();
   
 }
 
@@ -529,6 +582,10 @@ void die(){
     
     blinky.turnDirection=LEFT;
     blinky.moveDirection=LEFT;
+    
+    
+    
+    
   
 }
 
@@ -536,7 +593,7 @@ int startGame(int x, int y, int t, int r)
 {
     //printf("startGame");
     //initialize data
-    
+    tickValue=t;
     openScreen(x,y,r);
     
     //initialize screen
@@ -564,6 +621,7 @@ int startGame(int x, int y, int t, int r)
 
 int runGame(){
     printf("runGame");
+    startPause();
     char c;
 	while(1) {
 		// Wait for the user to press a character.
@@ -572,7 +630,7 @@ int runGame(){
                 return 1;
             }
         }
-        tick(5000);
+        tick(tickValue);
         updateScreen();
         updateGhost();
         updatePac();
